@@ -8,22 +8,33 @@
 import UIKit
 
 class ViewController: UIViewController {
-	
-	private let viewA = UIView()
-	private let viewB = UIView()
-	private let viewC = UIView()
-	private let viewD = UIView()
-	private let viewE = UIView()
-	
+    private let textLabel = UILabel()
+
+	private let viewA = CustomView()
+	private let viewB = CustomView()
+	private let viewC = CustomView()
+	private let viewD = CustomView()
+	private let viewE = CustomView()
+    
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		addSubViews()
 		setupViews()
 		addLabels()
+        addViewDelegate()
+        addViewName()
 		setupLayout()
 	}
 }
 
+//MARK: -> ICustomViewDelegate
+extension ViewController: ICustomViewDelegate {
+    func tappedView(_ view: String) {
+        textLabel.text = view
+    }
+}
+
+//MARK: -> Setup View
 private extension ViewController {
 	func addSubViews() {
 		view.addSubview(viewA)
@@ -45,21 +56,48 @@ private extension ViewController {
 	}
 	
 	func addLabels() {
-		addLabel(to: viewA, text: "A")
-		addLabel(to: viewB, text: "B")
-		addLabel(to: viewC, text: "C")
-		addLabel(to: viewD, text: "D")
-		addLabel(to: viewE, text: "E")
+		addLabelToView(to: viewA, text: "A")
+		addLabelToView(to: viewB, text: "B")
+		addLabelToView(to: viewC, text: "C")
+		addLabelToView(to: viewD, text: "D")
+		addLabelToView(to: viewE, text: "E")
+        addTextLabel(text: "Здесь будет название выбранной вью")
 	}
-	
+    
+    func addViewDelegate() {
+        addDelegate(
+            viewA,
+            viewB,
+            viewC,
+            viewD,
+            viewE
+        )
+    }
+    
+    func addViewName() {
+        viewA.nameInstanceView = "A"
+        viewB.nameInstanceView = "B"
+        viewC.nameInstanceView = "C"
+        viewD.nameInstanceView = "D"
+        viewE.nameInstanceView = "E"
+    }
+
 }
 
-// MARK: -> Private Methods
+// MARK: -> Setup Labels
 private extension ViewController {
-	func addLabel(to view: UIView, text: String) {
+    func addTextLabel(text: String) {
+        textLabel.text = text
+        textLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        textLabel.textColor = .black
+        textLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(textLabel)
+    }
+    
+    func addLabelToView(to view: UIView, text: String) {
 		let label = UILabel()
 		label.text = text
-		label.font = UIFont.boldSystemFont(ofSize: 24)
+		label.font = UIFont.boldSystemFont(ofSize: 15)
 		label.textColor = .black
 		label.translatesAutoresizingMaskIntoConstraints = false
 		view.addSubview(label)
@@ -72,6 +110,7 @@ private extension ViewController {
 	
 }
 
+//MARK: -> AutoLayout
 private extension ViewController {
 	func setupLayout() {
 		viewA.translatesAutoresizingMaskIntoConstraints = false
@@ -106,6 +145,9 @@ private extension ViewController {
 			viewE.centerXAnchor.constraint(equalTo: viewC.centerXAnchor),
 			viewE.widthAnchor.constraint(equalToConstant: 80),
 			viewE.heightAnchor.constraint(equalToConstant: 120),
+            
+            textLabel.bottomAnchor.constraint(equalTo: viewA.bottomAnchor, constant: 450),
+            textLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
 		])
 	}
 }
